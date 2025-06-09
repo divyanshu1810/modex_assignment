@@ -2,17 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import { BookTicketSchema } from '../../models/userTickets';
 import { v4 as uuidv4 } from 'uuid';
 import sequelize from '../../database';
-import { getUserByEmail } from '../../repo/userRepo';
 import { getTicketById, getTickets } from '../../repo/ticketRepo';
 import { getUserTickets, insertTickets, markUserTicketAsFailed } from '../../repo/userTicketRepo';
 
 export const bookTickets = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const email = res.locals.user.email;
-    const user = await getUserByEmail(email, true);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
     const tickets = req.body;
 
     const firstTicketId = tickets[0].ticketId;
@@ -110,10 +105,6 @@ export const updateTicket = async (_req: Request, res: Response, next: NextFunct
 
 export const fetchTickets = async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await getUserByEmail(res.locals.user.email, true);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
     const { limit = 10, offset = 0 } = _req.query;
 
     const tickets = await getTickets(Number(limit), Number(offset));

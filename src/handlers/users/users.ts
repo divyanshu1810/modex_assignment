@@ -27,9 +27,6 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 export const getUsers = async (_req: Request, res: Response, next: NextFunction) => {
   try {
-  if (!res.locals.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
     const user = await getUserByEmail(res.locals.user.email, true);
     res.status(200).json(user);
   } catch (error) {

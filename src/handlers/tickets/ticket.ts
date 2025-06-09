@@ -1,14 +1,9 @@
 import { Request, Response } from 'express';
 import { getTicketByEmailAndName, insertTicket } from '../../repo/ticketRepo';
-import { getUserByEmail } from '../../repo/userRepo';
 
 export const createTicket = async (req: Request, res: Response) => {
   try {
     const email = res.locals.user.email;
-    const user = await getUserByEmail(email, true);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
     const { name, showTime, price, totalSeats } = req.body;
     const existingMovie = await getTicketByEmailAndName(email, name, showTime);
     if (existingMovie) {
